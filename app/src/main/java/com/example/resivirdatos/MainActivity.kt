@@ -14,6 +14,8 @@ import com.google.android.material.textfield.TextInputEditText
 import java.text.Normalizer
 import java.util.Calendar
 //Juan Jose Ortiz Ortiz 29/01/2026
+//Kevin Daniel Lozada Saldibar
+//Enrique Morgado Montiel
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
