@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputEditText
 import java.text.Normalizer
 import java.util.Calendar
+
 //Juan Jose Ortiz Ortiz 29/01/2026
 //Kevin Daniel Lozada Saldibar
 //Enrique Morgado Montiel
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         val etHora = findViewById<TextInputEditText>(R.id.etHora)
         val etFecha = findViewById<TextInputEditText>(R.id.etFecha)
         val btnEnviar = findViewById<Button>(R.id.btnEnviar)
+
         // Configuracion del selector de fecha (DatePicker)
         etFecha.setOnClickListener {
             val calendar = Calendar.getInstance()
@@ -47,6 +49,7 @@ class MainActivity : AppCompatActivity() {
             }, year, month, day)
             datePicker.show()
         }
+
         // Configuracion del selector de hora (TimePicker)
         etHora.setOnClickListener {
             val calendar = Calendar.getInstance()
@@ -58,29 +61,42 @@ class MainActivity : AppCompatActivity() {
             }, hour, minute, true)
             timePicker.show()
         }
+
         // Evento al presionar el boton de enviar
         btnEnviar.setOnClickListener {
-            val nombreRaw = etNombre.text.toString()
-            val matricula = etMatricula.text.toString()
-            val asignaturaRaw = etAsignatura.text.toString()
-            val hora = etHora.text.toString()
-            val fecha = etFecha.text.toString()
+            val nombreRaw = etNombre.text.toString().trim()
+            val matricula = etMatricula.text.toString().trim()
+            val asignaturaRaw = etAsignatura.text.toString().trim()
+            val hora = etHora.text.toString().trim()
+            val fecha = etFecha.text.toString().trim()
+
             // Elimina los acentos de los textos ingresados
             val nombre = quitarAcentos(nombreRaw)
             val asignatura = quitarAcentos(asignaturaRaw)
-            // Validacion de campos vacios y longitud de matricula
+
+            // Validacion de datos
             when {
+                // Verifica que ningun campo este vacio
                 nombre.isEmpty() || matricula.isEmpty() || asignatura.isEmpty() || hora.isEmpty() || fecha.isEmpty() -> {
                     Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
                 }
+                // Valida que el nombre solo tenga letras y espacios
+                !validarSoloLetras(nombre) -> {
+                    etNombre.error = "El nombre solo debe contener letras"
+                    Toast.makeText(this, "Nombre invalido", Toast.LENGTH_SHORT).show()
+                }
+                // Valida que la matricula no sea mayor a 10 digitos
                 matricula.length > 10 -> {
                     etMatricula.error = "No debe exceder los 10 digitos"
                     Toast.makeText(this, "La matricula es demasiado larga", Toast.LENGTH_SHORT).show()
                 }
+                // Valida longitud minima del nombre
+                nombre.length < 3 -> {
+                    etNombre.error = "El nombre es demasiado corto"
+                    Toast.makeText(this, "Nombre muy corto", Toast.LENGTH_SHORT).show()
+                }
                 else -> {
                     // Prepara el resumen de los datos para mostrar en el dialogo
-                    // Se utiliza un String de varias lineas para organizar la informacion
-                    // Nombre (Texto), Matricula (Entero), Asignatura (Texto), Hora y Fecha (Formatos de tiempo)
                     val mensaje = """
                         Datos Ingresados:
                         Nombre: $nombre
@@ -89,6 +105,7 @@ class MainActivity : AppCompatActivity() {
                         Hora: $hora
                         Fecha: $fecha
                     """.trimIndent()
+
                     // Muestra el cuadro de dialogo con la informacion
                     AlertDialog.Builder(this)
                         .setTitle("Resumen de Registro")
@@ -100,12 +117,18 @@ class MainActivity : AppCompatActivity() {
                             etAsignatura.setText("")
                             etHora.setText("")
                             etFecha.setText("")
+                            etNombre.error = null
                             etMatricula.error = null
                         }
                         .show()
                 }
             }
         }
+    }
+
+    // Funcion para validar que el texto solo contenga letras y espacios
+    private fun validarSoloLetras(texto: String): Boolean {
+        return texto.all { it.isLetter() || it.isWhitespace() }
     }
 
     // Funcion auxiliar para remover acentos y marcas diacriticas
