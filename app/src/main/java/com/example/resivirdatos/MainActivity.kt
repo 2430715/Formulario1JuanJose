@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputEditText
 import java.text.Normalizer
 import java.util.Calendar
-
+//actualisacion
 //Juan Jose Ortiz Ortiz 29/01/2026
 //Kevin Daniel Lozada Saldibar
 //Enrique Morgado Montiel
